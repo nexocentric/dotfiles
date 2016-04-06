@@ -2,4 +2,4 @@
 My dotfiles
 
 # Installation
-wget http://github.com/nexocentric/dotfiles/setup/clone.sh -O - | sh
+wget https://raw.githubusercontent.com/nexocentric/dotfiles/master/dotfiles/setup/clone.sh -O - | sh
