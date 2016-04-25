@@ -4,7 +4,7 @@ readonly SCRIPT_NAME="$(basename "${0}")"
 readonly INSTALLATION_SCRIPTS_FOLDER="installers"
 readonly SCRIPT_INVOKER_USERNAME=$(who am i | awk '{print $1}' || logname)
 
-readonly MANDATORY_PROGRAMS=("sudo" "git" "curl" "tmux") #these can be changed to text files and read in that way
+readonly MANDATORY_PROGRAMS=("sudo" "git" "curl" "tmux" "powerline" "cmake" "fakeroot") #these can be changed to text files and read in that way
 readonly PROGRAMMING_LANGUAGES=("rvm" "python3") #or maybe they could be the installation script that you're looking
 readonly WEB_DEVELOPMENT_PROGRAMS=("rvm" "jekyll" "dos2unix")
 readonly OPTIONAL_PROGRAMS=("hiawatha" "samba" "shellcheck" "lynx" "checkinstall")
@@ -81,7 +81,7 @@ program_exists()
 	return 0
 }
 
-call_installation_script()
+run_installer_script()
 {
 	print_stderr "Sourcing the installation script for the [${1}] program."
 	local installation_script_path="${SCRIPT_DIRECTORY}/${INSTALLATION_SCRIPTS_FOLDER}/${1}.sh"
@@ -95,6 +95,7 @@ call_installation_script()
 	source $installation_script_path
 }
 
+#check to ensure script is running as root
 if [[ $(id -u) != 0 ]]; then
 	print_stderr "This script must be run as root."
 	print_stderr "Please run the script using the following command."
@@ -118,6 +119,6 @@ export -f program_exists
 for program in "${MANDATORY_PROGRAMS[@]}"; do
 	program_exists "${program}"
 	if [[ $? -ne 0 ]]; then
-		call_installation_script "${program}"
+		run_installer_script "${program}"
 	fi
 done

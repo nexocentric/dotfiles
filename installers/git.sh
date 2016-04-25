@@ -1,22 +1,8 @@
 #!/usr/bin/env bash
 
-print_stderr "In order to install programs, we must first install the sudo program."
-print_stderr "This will require the root user password."
-print_stderr " "
+print_stderr "Running installation for git."
 
-get_user_input "Please enter the password for root: "
+apt-get -y install git
+readonly INSTALLATION_STATUS=$?
 
-su -c 'bash -s' <<EOF
-	# list of root commands
-EOF
-
-# su
-# apt-get update
-# apt-get -y upgrade
-# apt-get -y install sudo
-
-# usermod -a -G sudo ddzakuma
-
-# #running this command will allow ddzakuma to get the new group assignments
-# #without logging out
-# #su - $USER
+exit $INSTALLATION_STATUS

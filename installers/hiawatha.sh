@@ -1,22 +1,39 @@
 #!/usr/bin/env bash
 
-print_stderr "In order to install programs, we must first install the sudo program."
-print_stderr "This will require the root user password."
-print_stderr " "
+print_stderr "Running installation for hiawatha."
 
-get_user_input "Please enter the password for root: "
+readonly CURRENT_DIRECTORY=$(pwd)
 
-su -c 'bash -s' <<EOF
-	# list of root commands
-EOF
+apt-get -y install libc6-dev libssl-dev dpkg-dev debhelper fakeroot libxml2-dev libxslt1-dev
+apt-get -y install cmake
 
-# su
-# apt-get update
-# apt-get -y upgrade
-# apt-get -y install sudo
+#attempt to find the hiest version of hiawatha
+readonly LATEST_HIAWATHA_SOURCE=$(curl https://www.hiawatha-webserver.org/files/ | grep -Ee ".*>(hiawatha[-0-9.]*\.tar\.gz)<.*" | sed -r "s/.*>(hiawatha[-0-9.]*\.tar\.gz)<.*/\1/")
 
-# usermod -a -G sudo ddzakuma
 
-# #running this command will allow ddzakuma to get the new group assignments
-# #without logging out
-# #su - $USER
+readonly temp_directory=$(mktemp -d)
+cd $temp_directory
+wget http://www.hiawatha-webserver.org/files/${LATEST_HIAWATHA_SOURCE}
+tar -xzvf ${LATEST_HIAWATHA_SOURCE}
+
+
+cd ${LATEST_HIAWATHA_SOURCE%.*}/extra
+
+./make_debian_package
+
+cd ..
+dpkg -i hiawatha_10.1_amd64.deb
+
+
+cd ${CURRENT_DIRECTORY}
+
+rm -rf cd $temp_directory
+
+service hiawatha restart
+
+# replace the default html file with content from this file
+# https://raw.githubusercontent.com/h5bp/html5-boilerplate/master/src/404.html
+
+readonly INSTALLATION_STATUS=$?
+
+exit $INSTALLATION_STATUS

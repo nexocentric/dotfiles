@@ -1,22 +1,12 @@
 #!/usr/bin/env bash
 
-print_stderr "In order to install programs, we must first install the sudo program."
-print_stderr "This will require the root user password."
-print_stderr " "
+print_stderr "Running installation for rvm."
 
-get_user_input "Please enter the password for root: "
+gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash -s stable --ruby
 
-su -c 'bash -s' <<EOF
-	# list of root commands
-EOF
+# source /etc/profile.d/rvm.sh
 
-# su
-# apt-get update
-# apt-get -y upgrade
-# apt-get -y install sudo
+readonly INSTALLATION_STATUS=$?
 
-# usermod -a -G sudo ddzakuma
-
-# #running this command will allow ddzakuma to get the new group assignments
-# #without logging out
-# #su - $USER
+exit $INSTALLATION_STATUS
