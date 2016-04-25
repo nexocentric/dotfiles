@@ -4,10 +4,12 @@ readonly SCRIPT_NAME="$(basename "${0}")"
 readonly INSTALLATION_SCRIPTS_FOLDER="installers"
 readonly SCRIPT_INVOKER_USERNAME=$(who am i | awk '{print $1}' || logname)
 
-readonly MANDATORY_PROGRAMS=("sudo" "git" "curl" "tmux" "powerline" "cmake" "fakeroot") #these can be changed to text files and read in that way
+readonly MANDATORY_PROGRAMS=("sudo" "git" "curl" "tmux" "powerline") #these can be changed to text files and read in that way
 readonly PROGRAMMING_LANGUAGES=("rvm" "python3") #or maybe they could be the installation script that you're looking
 readonly WEB_DEVELOPMENT_PROGRAMS=("rvm" "jekyll" "dos2unix")
-readonly OPTIONAL_PROGRAMS=("hiawatha" "samba" "shellcheck" "lynx" "checkinstall")
+readonly DATABASES=("postgres" "sqlite" "sqlite3")
+readonly DEVELOPMENT_TOOLS("checkinstall" "cmake" "fakeroot")
+readonly OPTIONAL_PROGRAMS=("hiawatha" "samba" "shellcheck" "lynx" "httpie")
 
 print_stderr()
 {
@@ -122,3 +124,15 @@ for program in "${MANDATORY_PROGRAMS[@]}"; do
 		run_installer_script "${program}"
 	fi
 done
+
+if [[ $(id -u) == 0 ]]; then
+	print_stderr "Installation complete."
+	exit 0
+fi
+
+#create aliases for everything that you wuld like to have as a script program
+#all script programs should end in .sh the alias you use will remove the sh
+#all script programs should run as the name and then a command followed by parameters
+#use a case statement in the script to determine the function of a program to run
+#if no program found return help
+#you should be good to go here pretty soon
